@@ -4,16 +4,12 @@ import { boards, columns } from '@/db/schema';
 import { getSession } from '@/lib/auth';
 import { and, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default async function Dashboard() {
-  const session = await getSession();
-
-  if (!session?.user) {
-    redirect('/sign-in');
-  }
-
+async function getBoard(userId: string) {
+  'use cache';
   const board = await db.query.boards.findFirst({
-    where: and(eq(boards.userId, session.user.id), eq(boards.name, 'Job Hunt')),
+    where: and(eq(boards.userId, userId), eq(boards.name, 'Job Hunt')),
     with: {
       columns: {
         with: {
@@ -22,6 +18,17 @@ export default async function Dashboard() {
       },
     },
   });
+
+  return board;
+}
+
+async function DashBoardPage() {
+  const session = await getSession();
+  const board = await getBoard(session?.user.id ?? '');
+
+  if (!session?.user) {
+    redirect('/sign-in');
+  }
 
   console.log(board);
 
@@ -39,5 +46,13 @@ export default async function Dashboard() {
         <KanbanBoard board={board} userId={session.user.id} />
       </div>
     </div>
+  );
+}
+
+export default async function Dashboard() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <DashBoardPage />
+    </Suspense>
   );
 }

@@ -5,6 +5,7 @@ import { and, desc, eq } from 'drizzle-orm';
 import { db } from '@/db';
 import { boards, columns, jobApplications } from '@/db/schema';
 import { getSession } from '../auth';
+import { revalidatePath } from 'next/cache';
 
 interface JobApplicationData {
   company: string;
@@ -91,6 +92,9 @@ export async function createJobApplication(data: JobApplicationData) {
       // status is optional because the schema default is "Applied"
     })
     .returning();
+
+  //revalidate
+  revalidatePath('/dashboard');
 
   return {
     data: job,
