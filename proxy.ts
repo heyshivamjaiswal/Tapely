@@ -1,27 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from './lib/auth';
+import { getSession } from './lib/auth';
 
-export default async function middleware(request: NextRequest) {
-  const session = await auth.api.getSession({
-    headers: request.headers,
-  });
-  const { pathname } = request.nextUrl;
+export default async function proxy(request: NextRequest) {
+  const session = await getSession();
 
-  const isProtectedRoute = pathname.startsWith('/dashboard');
-  const isAuthRoute =
-    pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up');
+  const isSignInPage = request.nextUrl.pathname.startsWith('/sign-in');
 
-  if (isProtectedRoute && !session?.user) {
-    return NextResponse.redirect(new URL('/sign-in', request.url));
-  }
+  const isSignUpPage = request.nextUrl.pathname.startsWith('/sign-up');
 
-  if (isAuthRoute && session?.user) {
+  if ((isSignInPage || isSignUpPage) && session?.user) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: ['/dashboard/:path*', '/sign-in', '/sign-up'],
-};
