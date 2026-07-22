@@ -4,6 +4,10 @@ import { db } from "../db";
 import { initializeUserBoard } from "../db/init-user-board";
 import { boards, columns, jobApplications } from "../db/schema";
 
+
+
+console.log("Database connection established");
+
 const USER_ID = "4NrRNm4xGM6HVDcn7qi9OzMHP8P1ntlK";
 
 const SAMPLE_JOBS = [
@@ -172,6 +176,9 @@ async function seed() {
     eq(boards.name, "Job Hunt")
   ),
 });
+
+console.log("After board query");
+console.log(board);
 
     if (!board) {
   console.log("⚠️  Board not found. Creating board...");

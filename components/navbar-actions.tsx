@@ -38,15 +38,16 @@ export default async function NavbarActions() {
         </Button>
       </Link>
       <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Avatar className="cursor-pointer">
-              <AvatarFallback className="bg-primary text-white">
-                {session.user.name[0].toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          }
-        />
+<DropdownMenuTrigger
+  nativeButton={false}
+  render={
+    <Avatar className="cursor-pointer">
+      <AvatarFallback className="bg-primary text-white">
+        {session.user.name[0].toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
+  }
+/>
         <DropdownMenuContent className="w-56">
           <div className="border-b px-3 py-2">
             <p className="font-medium">{session.user.name}</p>
