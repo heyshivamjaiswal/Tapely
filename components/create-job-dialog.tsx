@@ -71,132 +71,135 @@ export default function CreateJobApplicationDialog({
         render={
           <Button
             variant="outline"
-            className="w-full mb-4 justify-start text-muted-foreground border-dashed border-2 hover:border-solid hover:bg-muted/50"
+            className="w-full mb-4 justify-start text-muted-foreground border-dashed border-2 hover:border-solid hover:bg-muted/50 transition-colors"
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Job
           </Button>
         }
       />
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Add Job Application</DialogTitle>
-          <DialogDescription>Track a new job application</DialogDescription>
-        </DialogHeader>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+      <DialogContent className="max-w-2xl overflow-hidden p-0">
+        <div className="h-1.5 w-full bg-primary" />
+        <div className="max-h-[85vh] overflow-y-auto p-6">
+          <DialogHeader className="mb-2">
+            <DialogTitle className="text-xl">Add Job Application</DialogTitle>
+            <DialogDescription>Track a new job application</DialogDescription>
+          </DialogHeader>
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="company">Company *</Label>
+                  <Input
+                    id="company"
+                    required
+                    value={formData.company}
+                    onChange={(e) =>
+                      setFormData({ ...formData, company: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="position">Position *</Label>
+                  <Input
+                    id="position"
+                    required
+                    value={formData.position}
+                    onChange={(e) =>
+                      setFormData({ ...formData, position: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="location">Location</Label>
+                  <Input
+                    id="location"
+                    value={formData.location}
+                    onChange={(e) =>
+                      setFormData({ ...formData, location: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="salary">Salary</Label>
+                  <Input
+                    id="salary"
+                    placeholder="e.g., 12 LPA, 20 LPA"
+                    value={formData.salary}
+                    onChange={(e) =>
+                      setFormData({ ...formData, salary: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="company">Company *</Label>
+                <Label htmlFor="jobUrl">Job URL</Label>
                 <Input
-                  id="company"
-                  required
-                  value={formData.company}
+                  id="jobUrl"
+                  placeholder="https://.."
+                  value={formData.jobUrl}
                   onChange={(e) =>
-                    setFormData({ ...formData, company: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="space-t-2">
-                <Label htmlFor="position">Position *</Label>
-                <Input
-                  id="position"
-                  required
-                  value={formData.position}
-                  onChange={(e) =>
-                    setFormData({ ...formData, position: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  value={formData.location}
-                  onChange={(e) =>
-                    setFormData({ ...formData, location: e.target.value })
+                    setFormData({ ...formData, jobUrl: e.target.value })
                   }
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="salary">Salary</Label>
+                <Label htmlFor="tags">Tags (comma-separated)</Label>
                 <Input
-                  id="salary"
-                  placeholder="e.g., 12 LPa , 20 LPA"
-                  value={formData.salary}
+                  id="tags"
+                  placeholder="React, Nextjs, Backend"
+                  value={formData.tags}
                   onChange={(e) =>
-                    setFormData({ ...formData, salary: e.target.value })
+                    setFormData({ ...formData, tags: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  rows={3}
+                  placeholder="Brief description of the role.."
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="notes">Notes</Label>
+                <Textarea
+                  id="notes"
+                  rows={4}
+                  value={formData.notes}
+                  onChange={(e) =>
+                    setFormData({ ...formData, notes: e.target.value })
                   }
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="jobUrl">Job URL</Label>
-              <Input
-                id="jobUrl"
-                placeholder="https://.."
-                value={formData.jobUrl}
-                onChange={(e) =>
-                  setFormData({ ...formData, jobUrl: e.target.value })
-                }
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="tags">Tags (comma-separated)</Label>
-              <Input
-                id="tags"
-                placeholder="React , Nextjs , Backend"
-                value={formData.tags}
-                onChange={(e) =>
-                  setFormData({ ...formData, tags: e.target.value })
-                }
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                rows={3}
-                placeholder="Brief description of the role.."
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="Notes">Notes</Label>
-              <Textarea
-                id="notes"
-                rows={4}
-                value={formData.notes}
-                onChange={(e) =>
-                  setFormData({ ...formData, notes: e.target.value })
-                }
-              />
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit">Add Application</Button>
-          </DialogFooter>
-        </form>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Add Application</Button>
+            </DialogFooter>
+          </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

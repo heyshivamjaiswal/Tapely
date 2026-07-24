@@ -12,6 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { authClient } from '@/lib/auth-client';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -45,7 +46,7 @@ export default function SignIn() {
       const response = await authClient.signIn.email(formData);
 
       if (response.error) {
-        setError(response.error.message ?? 'Failed to sign ip');
+        setError(response.error.message ?? 'Failed to sign in');
         return;
       }
 
@@ -59,13 +60,21 @@ export default function SignIn() {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-white p-4">
-      <Card className="w-full max-w-md border-gray-200 shadow-lg">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-black">
-            Sign In
-          </CardTitle>
-          <CardDescription className="text-gray-600">
+    <div className="relative flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden bg-background p-4">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-60"
+        style={{
+          background:
+            'radial-gradient(600px circle at 50% 0%, color-mix(in oklab, var(--primary) 12%, transparent), transparent 70%)',
+        }}
+        aria-hidden="true"
+      />
+
+      <Card className="relative w-full max-w-md overflow-hidden border-border shadow-xl">
+        <div className="h-1.5 w-full bg-primary" />
+        <CardHeader className="space-y-1 pt-6">
+          <CardTitle className="text-2xl font-semibold">Sign In</CardTitle>
+          <CardDescription>
             Enter your credentials to access your account.
           </CardDescription>
         </CardHeader>
@@ -73,14 +82,12 @@ export default function SignIn() {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             {error && (
-              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
                 {error}
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-700">
-                Email
-              </Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 name="email"
@@ -89,14 +96,11 @@ export default function SignIn() {
                 type="email"
                 placeholder="example@gmail.com"
                 required
-                className="border-gray-300 focus:border-primary focus:ring-primary"
               />
             </div>
 
-            <div>
-              <Label htmlFor="password" className="text-gray-700">
-                Password
-              </Label>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 name="password"
@@ -105,21 +109,17 @@ export default function SignIn() {
                 type="password"
                 placeholder="****"
                 required
-                className="border-gray-300 focus:border-primary focus:ring-primary"
               />
             </div>
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-4">
-            <Button
-              className="w-full bg-primary hover:bg-primary/90"
-              type="submit"
-              disabled={loading}
-            >
+            <Button className="w-full" type="submit" disabled={loading}>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {loading ? 'Signing in...' : 'Sign In'}
             </Button>
-            <p className="text-center text-sm text-gray-600">
-              Don't have an account?{' '}
+            <p className="text-center text-sm text-muted-foreground">
+              Don&apos;t have an account?{' '}
               <Link
                 className="font-medium text-primary hover:underline"
                 href="/sign-up"

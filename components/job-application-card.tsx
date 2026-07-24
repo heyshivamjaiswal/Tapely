@@ -33,6 +33,25 @@ interface JobApplicationCardProps {
   dragHandleProps?: React.HTMLAttributes<HTMLElement>;
 }
 
+// Purely presentational — cycles tags through the same tape palette used
+// elsewhere in the app, deterministic by tag text so a given tag always gets
+// the same color across cards.
+const TAG_COLORS = [
+  'bg-tape-cyan/10 text-tape-cyan',
+  'bg-tape-violet/10 text-tape-violet',
+  'bg-tape-amber/10 text-tape-amber',
+  'bg-tape-emerald/10 text-tape-emerald',
+  'bg-tape-rose/10 text-tape-rose',
+];
+
+function tagColor(tag: string) {
+  let hash = 0;
+  for (let i = 0; i < tag.length; i++) {
+    hash = (hash * 31 + tag.charCodeAt(i)) % TAG_COLORS.length;
+  }
+  return TAG_COLORS[hash];
+}
+
 export default function JobApplicationCard({
   job,
   columns,
@@ -102,31 +121,31 @@ export default function JobApplicationCard({
   return (
     <>
       <Card
-        className="cursor-pointer transition-shadow hover:shadow-lg bg-white group shadow-sm"
+        className="group cursor-grab border-border bg-card shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing"
         {...dragHandleProps}
       >
         <CardContent className="p-4">
           <div className="flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-sm mb-1 truncate">
+            <div className="min-w-0 flex-1">
+              <h3 className="mb-0.5 truncate font-heading text-sm font-semibold">
                 {job.position}
               </h3>
-              <p className="text-xs text-muted-foreground mb-2 truncate">
+              <p className="mb-2 truncate text-xs text-muted-foreground">
                 {job.company}
               </p>
 
               {job.description && (
-                <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                <p className="mb-2 line-clamp-2 text-xs text-muted-foreground">
                   {job.description}
                 </p>
               )}
 
               {job.tags && job.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mb-2">
+                <div className="mb-2 flex flex-wrap gap-1">
                   {job.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700"
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${tagColor(tag)}`}
                     >
                       {tag}
                     </span>
@@ -135,7 +154,7 @@ export default function JobApplicationCard({
               )}
 
               {job.jobUrl && (
-                <a
+                 <a
                   href={job.jobUrl}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -154,7 +173,7 @@ export default function JobApplicationCard({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-6 w-6 shrink-0"
+                    className="h-6 w-6 shrink-0 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 data-[popup-open]:opacity-100"
                   >
                     <MoreVertical className="h-4 w-4" />
                   </Button>
@@ -190,125 +209,135 @@ export default function JobApplicationCard({
       </Card>
 
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Edit Job Application</DialogTitle>
-            <DialogDescription>Update this application's details</DialogDescription>
-          </DialogHeader>
-          <form className="space-y-4" onSubmit={handleUpdate}>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+        <DialogContent className="max-w-2xl overflow-hidden p-0">
+          <div className="h-1.5 w-full bg-primary" />
+          <div className="max-h-[85vh] overflow-y-auto p-6">
+            <DialogHeader className="mb-2">
+              <DialogTitle className="text-xl">
+                Edit Job Application
+              </DialogTitle>
+              <DialogDescription>
+                Update this application&apos;s details
+              </DialogDescription>
+            </DialogHeader>
+            <form className="space-y-4" onSubmit={handleUpdate}>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="company">Company *</Label>
+                    <Input
+                      id="company"
+                      required
+                      value={formData.company}
+                      onChange={(e) =>
+                        setFormData({ ...formData, company: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="position">Position *</Label>
+                    <Input
+                      id="position"
+                      required
+                      value={formData.position}
+                      onChange={(e) =>
+                        setFormData({ ...formData, position: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="location">Location</Label>
+                    <Input
+                      id="location"
+                      value={formData.location}
+                      onChange={(e) =>
+                        setFormData({ ...formData, location: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="salary">Salary</Label>
+                    <Input
+                      id="salary"
+                      placeholder="e.g., 12 LPA, 20 LPA"
+                      value={formData.salary}
+                      onChange={(e) =>
+                        setFormData({ ...formData, salary: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="company">Company *</Label>
+                  <Label htmlFor="jobUrl">Job URL</Label>
                   <Input
-                    id="company"
-                    required
-                    value={formData.company}
+                    id="jobUrl"
+                    placeholder="https://.."
+                    value={formData.jobUrl}
                     onChange={(e) =>
-                      setFormData({ ...formData, company: e.target.value })
+                      setFormData({ ...formData, jobUrl: e.target.value })
                     }
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="position">Position *</Label>
+                  <Label htmlFor="tags">Tags (comma-separated)</Label>
                   <Input
-                    id="position"
-                    required
-                    value={formData.position}
+                    id="tags"
+                    placeholder="React, Nextjs, Backend"
+                    value={formData.tags}
                     onChange={(e) =>
-                      setFormData({ ...formData, position: e.target.value })
+                      setFormData({ ...formData, tags: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    rows={3}
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        description: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="notes">Notes</Label>
+                  <Textarea
+                    id="notes"
+                    rows={4}
+                    value={formData.notes}
+                    onChange={(e) =>
+                      setFormData({ ...formData, notes: e.target.value })
                     }
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="location">Location</Label>
-                  <Input
-                    id="location"
-                    value={formData.location}
-                    onChange={(e) =>
-                      setFormData({ ...formData, location: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="salary">Salary</Label>
-                  <Input
-                    id="salary"
-                    placeholder="e.g., 12 LPA, 20 LPA"
-                    value={formData.salary}
-                    onChange={(e) =>
-                      setFormData({ ...formData, salary: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="jobUrl">Job URL</Label>
-                <Input
-                  id="jobUrl"
-                  placeholder="https://.."
-                  value={formData.jobUrl}
-                  onChange={(e) =>
-                    setFormData({ ...formData, jobUrl: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="tags">Tags (comma-separated)</Label>
-                <Input
-                  id="tags"
-                  placeholder="React, Nextjs, Backend"
-                  value={formData.tags}
-                  onChange={(e) =>
-                    setFormData({ ...formData, tags: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  rows={3}
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="notes">Notes</Label>
-                <Textarea
-                  id="notes"
-                  rows={4}
-                  value={formData.notes}
-                  onChange={(e) =>
-                    setFormData({ ...formData, notes: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsEditing(false)}
-                disabled={saving}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={saving}>
-                {saving ? 'Saving...' : 'Save Changes'}
-              </Button>
-            </DialogFooter>
-          </form>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditing(false)}
+                  disabled={saving}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={saving}>
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </div>
         </DialogContent>
       </Dialog>
     </>

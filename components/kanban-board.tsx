@@ -97,10 +97,7 @@ function ColumnTitle({ column }: { column: Column }) {
           }}
           className="h-7 bg-white/20 border-white/30 text-white placeholder:text-white/70 text-sm font-semibold"
         />
-        <button
-          onClick={handleSave}
-          className="text-white/90 hover:text-white shrink-0"
-        >
+        <button onClick={handleSave} className="text-white/90 hover:text-white shrink-0">
           <Check className="h-4 w-4" />
         </button>
         <button
@@ -119,7 +116,7 @@ function ColumnTitle({ column }: { column: Column }) {
   return (
     <CardTitle
       onClick={() => setEditing(true)}
-      className="text-white text-base font-semibold cursor-text hover:opacity-80 truncate"
+      className="text-white text-sm font-semibold cursor-text hover:opacity-80 truncate"
     >
       {column.name}
     </CardTitle>
@@ -155,25 +152,21 @@ function DroppableColumn({
   }
 
   return (
-    <Card className="min-w-[300px] flex-shrink-0 shadow-md p-0 rounded-xl overflow-hidden border-none">
-      <CardHeader className={`bg-gradient-to-r ${config.color} text-white pb-3 pt-3`}>
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0 flex-1">
-            {config.icon}
-            <ColumnTitle column={column} />
-            <span className="text-xs font-medium bg-white/20 rounded-full px-2 py-0.5 shrink-0">
-              {sortedJobs.length}
-            </span>
-          </div>
-
+  <Card className="w-[280px] flex-shrink-0 shadow-sm p-0 rounded-xl overflow-hidden border-none self-start flex flex-col max-h-[calc(100vh-260px)]">
+    <CardHeader className={`bg-gradient-to-r ${config.color} text-white px-3 py-2.5 shrink-0`}>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <span className="shrink-0">{config.icon}</span>
+          <ColumnTitle column={column} />
+        </div>
+        <div className="flex items-center gap-1 shrink-0">
+          <span className="text-xs font-medium bg-white/25 rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center">
+            {sortedJobs.length}
+          </span>
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6 text-white hover:bg-white/20 shrink-0"
-                >
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-white hover:bg-white/20">
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               }
@@ -186,30 +179,37 @@ function DroppableColumn({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </CardHeader>
+      </div>
+    </CardHeader>
 
-      <CardContent
-        ref={setNodeRef}
-        className={`space-y-2 pt-4 bg-gray-50/70 min-h-[400px] transition-colors ${
-          isOver ? 'ring-2 ring-inset ring-blue-400 bg-blue-50/50' : ''
-        }`}
-      >
-        <SortableContext
-          items={sortedJobs.map((job) => job.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          {sortedJobs.map((job) => (
-            <SortableJobCard
-              key={job.id}
-              job={{ ...job, columnId: job.columnId || column.id }}
-              columns={sortedColumns}
-            />
-          ))}
-        </SortableContext>
+    {/* scrollable job list — this is the fix */}
+    <CardContent
+      ref={setNodeRef}
+      className={`flex-1 overflow-y-auto space-y-2 p-2 bg-gray-50/70 transition-colors ${
+        sortedJobs.length === 0 ? 'min-h-[100px]' : 'min-h-0'
+      } ${isOver ? 'ring-2 ring-inset ring-blue-400 bg-blue-50/50' : ''}`}
+    >
+      <SortableContext items={sortedJobs.map((job) => job.id)} strategy={verticalListSortingStrategy}>
+        {sortedJobs.length === 0 && (
+          <div className="flex h-full min-h-[70px] items-center justify-center text-xs text-muted-foreground">
+            No applications yet
+          </div>
+        )}
+        {sortedJobs.map((job) => (
+          <SortableJobCard
+            key={job.id}
+            job={{ ...job, columnId: job.columnId || column.id }}
+            columns={sortedColumns}
+          />
+        ))}
+      </SortableContext>
+    </CardContent>
 
-        <CreateJobApplicationDialog columnId={column.id} boardId={boardId} />
-      </CardContent>
-    </Card>
+    {/* pinned footer — never scrolls out of view */}
+    <div className="shrink-0 p-2 pt-1.5 bg-gray-50/70 border-t border-black/5">
+      <CreateJobApplicationDialog columnId={column.id} boardId={boardId} />
+    </div>
+  </Card>
   );
 }
 
@@ -220,17 +220,11 @@ function SortableJobCard({
   job: JobApplication;
   columns: Column[];
 }) {
-  const {
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-    setNodeRef,
-  } = useSortable({
-    id: job.id,
-    data: { type: 'job', job },
-  });
+  const { attributes, listeners, transform, transition, isDragging, setNodeRef } =
+    useSortable({
+      id: job.id,
+      data: { type: 'job', job },
+    });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -277,9 +271,7 @@ export default function KanbanBoard({ board }: KanbanBoardProps) {
     let sourceIndex = -1;
 
     for (const column of sortedColumns) {
-      const jobs = [...column.jobApplications].sort(
-        (a, b) => a.order - b.order
-      );
+      const jobs = [...column.jobApplications].sort((a, b) => a.order - b.order);
       const jobIndex = jobs.findIndex((j) => j.id === activeId);
       if (jobIndex !== -1) {
         draggedJob = jobs[jobIndex];
@@ -312,15 +304,12 @@ export default function KanbanBoard({ board }: KanbanBoardProps) {
       targetColumnId = targetJob.columnId || targetJobColumn?.id || '';
       if (!targetColumnId) return;
 
-      const targetColumnObj = sortedColumns.find(
-        (col) => col.id === targetColumnId
-      );
+      const targetColumnObj = sortedColumns.find((col) => col.id === targetColumnId);
       if (!targetColumnObj) return;
 
-      const allJobsInTargetOriginal = [
-        ...targetColumnObj.jobApplications,
-      ].sort((a, b) => a.order - b.order);
-
+      const allJobsInTargetOriginal = [...targetColumnObj.jobApplications].sort(
+        (a, b) => a.order - b.order
+      );
       const allJobsInTargetFiltered = allJobsInTargetOriginal.filter(
         (j) => j.id !== activeId
       );
@@ -364,27 +353,31 @@ export default function KanbanBoard({ board }: KanbanBoardProps) {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="overflow-x-auto pb-4">
-        <div className="flex gap-4 min-w-fit items-start">
-          {sortedColumns.map((col, index) => {
-            const config = COLUMN_CONFIG[index % COLUMN_CONFIG.length];
-            return (
-              <DroppableColumn
-                key={col.id}
-                column={col}
-                config={config}
-                boardId={board.id}
-                sortedColumns={sortedColumns}
-              />
-            );
-          })}
-          <CreateColumnDialog boardId={board.id} />
+      <div className="relative">
+        <div className="overflow-x-auto pb-4">
+          <div className="flex gap-4 items-start w-fit">
+            {sortedColumns.map((col, index) => {
+              const config = COLUMN_CONFIG[index % COLUMN_CONFIG.length];
+              return (
+                <DroppableColumn
+                  key={col.id}
+                  column={col}
+                  config={config}
+                  boardId={board.id}
+                  sortedColumns={sortedColumns}
+                />
+              );
+            })}
+            <CreateColumnDialog boardId={board.id} />
+          </div>
         </div>
+
+        <div className="pointer-events-none absolute right-0 top-0 bottom-4 w-16 bg-gradient-to-l from-background to-transparent" />
       </div>
 
       <DragOverlay>
         {activeJob ? (
-          <div className="opacity-90 rotate-2 scale-105">
+          <div className="opacity-90 rotate-2 scale-105 w-[264px]">
             <JobApplicationCard job={activeJob} columns={sortedColumns} />
           </div>
         ) : null}

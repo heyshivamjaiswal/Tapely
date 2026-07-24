@@ -46,51 +46,56 @@ export default function CreateColumnDialog({ boardId }: { boardId: string }) {
         render={
           <Button
             variant="outline"
-            className="min-w-[280px] h-full min-h-[120px] flex-shrink-0 border-dashed border-2 text-muted-foreground hover:border-solid hover:bg-muted/50 flex flex-col items-center justify-center gap-2 rounded-xl"
+            className="min-w-[280px] h-full min-h-[120px] flex-shrink-0 border-dashed border-2 text-muted-foreground hover:border-solid hover:bg-muted/50 hover:text-foreground flex flex-col items-center justify-center gap-2 rounded-xl transition-all"
           >
-            <Plus className="h-5 w-5" />
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
+              <Plus className="h-4 w-4" />
+            </span>
             Add Column
           </Button>
         }
       />
-      <DialogContent className="max-w-sm">
-        <DialogHeader>
-          <DialogTitle>New Column</DialogTitle>
-          <DialogDescription>
-            Add a stage to your board — e.g. "Phone Screen" or "Final Round"
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-              {error}
+      <DialogContent className="max-w-sm overflow-hidden p-0">
+        <div className="h-1.5 w-full bg-primary" />
+        <div className="p-6">
+          <DialogHeader className="mb-2">
+            <DialogTitle className="text-xl">New Column</DialogTitle>
+            <DialogDescription>
+              Add a stage to your board — e.g. "Phone Screen" or "Final Round"
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                {error}
+              </div>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="column-name">Column name</Label>
+              <Input
+                id="column-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Phone Screen"
+                required
+                autoFocus
+              />
             </div>
-          )}
-          <div className="space-y-2">
-            <Label htmlFor="column-name">Column name</Label>
-            <Input
-              id="column-name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Phone Screen"
-              required
-              autoFocus
-            />
-          </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              disabled={saving}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={saving}>
-              {saving ? 'Adding...' : 'Add Column'}
-            </Button>
-          </DialogFooter>
-        </form>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                disabled={saving}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={saving}>
+                {saving ? 'Adding...' : 'Add Column'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

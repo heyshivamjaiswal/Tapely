@@ -31,16 +31,30 @@ async function DashBoardPage() {
   const board = await getBoard(session.user.id);
 
   if (!board) {
-    return <div>No board found.</div>;
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center text-muted-foreground">
+        No board found.
+      </div>
+    );
   }
 
+  const totalApplications = board.columns.reduce(
+    (sum, col) => sum + col.jobApplications.length,
+    0
+  );
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-black">Job Hunt</h1>
-          <p className="text-gray-600">Track your job application</p>
+        <div className="mb-8">
+          <h1 className="text-3xl font-semibold">Job Hunt</h1>
+          <p className="text-muted-foreground">
+            {totalApplications === 0
+              ? 'Add your first application to get started'
+              : `${totalApplications} application${totalApplications === 1 ? '' : 's'} tracked`}
+          </p>
         </div>
+
         <KanbanBoard board={board} userId={session.user.id} />
       </div>
     </div>

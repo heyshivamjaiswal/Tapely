@@ -1,4 +1,3 @@
-// components/navbar.tsx
 import { Briefcase } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -6,13 +5,13 @@ import NavbarActions from './navbar-actions';
 
 export default function Navbar() {
   return (
-    <nav className="border-b border-gray-200 bg-white">
-      <div className="container mx-auto flex h-16 items-center px-4 justify-between">
+    <nav className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-sm">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link
           href="/"
-          className="flex items-center gap-2 text-xl font-semibold text-primary"
+          className="flex items-center gap-2 font-heading text-lg font-semibold text-foreground"
         >
-          <Briefcase />
+          <Briefcase className="h-5 w-5 text-primary" />
           Job Tracker
         </Link>
         <Suspense fallback={<div className="h-9 w-40" />}>
