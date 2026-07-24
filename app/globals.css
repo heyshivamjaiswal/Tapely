@@ -189,3 +189,6 @@
     transform: translateY(-6px) rotate(-1deg);
   }
 }
+
+.overflow-y-auto::-webkit-scrollbar { width: 6px; }
+.overflow-y-auto::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
