@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { AmbientBackground } from '@/components/ambient-background';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -43,8 +44,10 @@ const STAGES = [
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <main className="flex-1">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
+            <AmbientBackground />
+
+      <main className="relative z-10 flex-1">
         <section className="container mx-auto px-4 pt-24 pb-20 md:pt-32">
           <div className="grid gap-16 md:grid-cols-2 md:items-center">
             <div>

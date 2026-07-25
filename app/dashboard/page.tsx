@@ -1,4 +1,6 @@
 import KanbanBoard from '@/components/kanban-board';
+import { AmbientBackground } from '@/components/ambient-background';
+import { BoardSkeleton } from '@/components/board-skeleton';
 import { db } from '@/db';
 import { boards } from '@/db/schema';
 import { getSession } from '@/lib/auth';
@@ -44,9 +46,11 @@ async function DashBoardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto p-6">
-        <div className="mb-8">
+    <div className="relative min-h-screen overflow-hidden bg-background">
+      <AmbientBackground intensity="subtle" />
+
+      <div className="container relative z-10 mx-auto p-6">
+        <div className="mb-6">
           <h1 className="text-3xl font-semibold">Job Hunt</h1>
           <p className="text-muted-foreground">
             {totalApplications === 0
@@ -55,7 +59,9 @@ async function DashBoardPage() {
           </p>
         </div>
 
-        <KanbanBoard board={board} userId={session.user.id} />
+        <div className="relative rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-6">
+          <KanbanBoard board={board} />
+        </div>
       </div>
     </div>
   );
@@ -63,8 +69,18 @@ async function DashBoardPage() {
 
 export default function Dashboard() {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<BoardSkeletonWrapper />}>
       <DashBoardPage />
     </Suspense>
+  );
+}
+
+function BoardSkeletonWrapper() {
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-background">
+      <div className="container relative z-10 mx-auto p-6">
+        <BoardSkeleton />
+      </div>
+    </div>
   );
 }

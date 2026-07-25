@@ -16,6 +16,7 @@ import {
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { createColumn } from '@/lib/actions/columns';
+import { COLUMN_HEIGHT, COLUMN_WIDTH } from './kanban-board';
 
 export default function CreateColumnDialog({ boardId }: { boardId: string }) {
   const [open, setOpen] = useState(false);
@@ -46,7 +47,7 @@ export default function CreateColumnDialog({ boardId }: { boardId: string }) {
         render={
           <Button
             variant="outline"
-            className="min-w-[280px] h-full min-h-[120px] flex-shrink-0 border-dashed border-2 text-muted-foreground hover:border-solid hover:bg-muted/50 hover:text-foreground flex flex-col items-center justify-center gap-2 rounded-xl transition-all"
+            className={`${COLUMN_WIDTH} ${COLUMN_HEIGHT} flex-shrink-0 border-dashed border-2 text-muted-foreground hover:border-solid hover:bg-muted/50 hover:text-foreground flex flex-col items-center justify-center gap-2 rounded-xl transition-all`}
           >
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
               <Plus className="h-4 w-4" />

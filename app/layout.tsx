@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Job Tracker — organize your job search',
+  title: 'Tapely',
   description:
     'Track every application, interview, and offer on one board instead of a dying spreadsheet.',
 };

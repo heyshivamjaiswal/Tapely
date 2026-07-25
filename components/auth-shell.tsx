@@ -1,14 +1,34 @@
-// components/auth-shell.tsx
+
 'use client';
 
 import Link from 'next/link';
-import { Briefcase } from 'lucide-react';
+import { AmbientBackground } from '@/components/ambient-background';
+import { Logo } from './logo';
 
 const PREVIEW_CARDS = [
   { company: 'Vercel', role: 'Frontend Engineer', tape: 'bg-tape-emerald', status: 'Interviewing' },
   { company: 'Linear', role: 'Product Engineer', tape: 'bg-tape-violet', status: 'Applied' },
   { company: 'Stripe', role: 'Platform Engineer', tape: 'bg-tape-amber', status: 'Offer' },
 ];
+
+function Seam() {
+  return (
+    <div className="relative hidden w-6 shrink-0 lg:block bg-[#F2F1EC]">
+      <div
+        className="absolute left-1/2 top-6 bottom-6 w-px -translate-x-1/2 border-l border-dashed border-[#C7C4B6]"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute -top-3 left-1/2 h-6 w-6 -translate-x-1/2 rounded-full bg-[#15131F]"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute -bottom-3 left-1/2 h-6 w-6 -translate-x-1/2 rounded-full bg-[#15131F]"
+        aria-hidden="true"
+      />
+    </div>
+  );
+}
 
 export function AuthShell({
   eyebrow,
@@ -25,22 +45,46 @@ export function AuthShell({
 }) {
   return (
     <div className="flex h-screen overflow-hidden bg-[#F2F1EC]">
-      {/* Brand panel — fixed, never scrolls */}
-      <div className="hidden h-full lg:flex lg:w-[46%] relative flex-col justify-between bg-[#15131F] text-white p-12 overflow-hidden">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage:
-              'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
-            backgroundSize: '28px 28px',
-          }}
-          aria-hidden="true"
-        />
+      {/* Form panel — left, the only part that scrolls */}
+      <div className="relative flex-1 h-full">
+        <AmbientBackground variant="light" intensity="subtle" />
 
-        <Link href="/" className="relative flex items-center gap-2 text-sm font-medium">
-          <Briefcase className="h-4 w-4 text-tape-violet" />
-          Job Tracker
-        </Link>
+        <div className="relative h-full overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-6 sm:p-10">
+            <div className="relative w-full max-w-[400px]">
+              <div
+                className="absolute -top-3 left-8 h-6 w-16 bg-tape-violet/90 rounded-[2px] shadow-sm z-10"
+                style={{ transform: 'rotate(-4deg)' }}
+                aria-hidden="true"
+              />
+              <div className="relative bg-white border border-border rounded-2xl shadow-xl px-8 py-9 sm:px-9 sm:py-10">
+                <p className="font-mono text-[11px] tracking-[0.18em] text-muted-foreground uppercase mb-3">
+                  {eyebrow}
+                </p>
+                <h1 className="text-[26px] font-semibold tracking-tight text-foreground">
+                  {title}
+                </h1>
+                <p className="mt-1.5 text-sm text-muted-foreground">{description}</p>
+
+                <div className="mt-7">{children}</div>
+
+                <div className="mt-6 pt-6 border-t border-border">{footer}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Seam />
+
+      {/* Brand panel — right, fixed, never scrolls */}
+      <div className="hidden h-full lg:flex lg:w-[44%] relative flex-col justify-between bg-[#15131F] text-white p-12 overflow-hidden">
+        <AmbientBackground variant="dark" />
+
+      <Link href="/" className="relative flex items-center gap-2 text-sm font-medium">
+       <Logo className="h-5 w-5" />
+           Tapely
+      </Link>
 
         <div className="relative space-y-10">
           <div className="space-y-3 max-w-sm">
@@ -80,46 +124,9 @@ export function AuthShell({
           </div>
         </div>
 
-        <p className="relative font-mono text-[11px] text-white/30">
-          © {new Date().getFullYear()} Job Tracker
-        </p>
-      </div>
-
-      {/* Form panel — the only part that scrolls */}
-      <div className="relative flex-1 h-full">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-70"
-          style={{
-            background:
-              'radial-gradient(560px circle at 50% 0%, color-mix(in oklab, var(--primary) 10%, transparent), transparent 70%)',
-          }}
-          aria-hidden="true"
-        />
-
-        <div className="relative h-full overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-6 sm:p-10">
-            <div className="relative w-full max-w-[400px]">
-              <div
-                className="absolute -top-3 left-8 h-6 w-16 bg-tape-violet/90 rounded-[2px] shadow-sm z-10"
-                style={{ transform: 'rotate(-4deg)' }}
-                aria-hidden="true"
-              />
-              <div className="relative bg-white border border-border rounded-2xl shadow-xl px-8 py-9 sm:px-9 sm:py-10">
-                <p className="font-mono text-[11px] tracking-[0.18em] text-muted-foreground uppercase mb-3">
-                  {eyebrow}
-                </p>
-                <h1 className="text-[26px] font-semibold tracking-tight text-foreground">
-                  {title}
-                </h1>
-                <p className="mt-1.5 text-sm text-muted-foreground">{description}</p>
-
-                <div className="mt-7">{children}</div>
-
-                <div className="mt-6 pt-6 border-t border-border">{footer}</div>
-              </div>
-            </div>
-          </div>
-        </div>
+     <p className="relative font-mono text-[11px] text-white/30">
+       © {new Date().getFullYear()} Tapely
+    </p>
       </div>
     </div>
   );
