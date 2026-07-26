@@ -1,6 +1,25 @@
 # Tapely
 
-A visual, AI-assisted job application tracker. Every saved role, active application, and interview lives on one drag-and-drop board instead of scattered browser tabs and a spreadsheet nobody updates.
+<p align="center">
+  A modern, AI-assisted job application tracker built with Next.js, Drizzle ORM, PostgreSQL, and Better Auth.
+  Organize every opportunity—from your wishlist to an accepted offer—on a fast, intuitive Kanban board.
+</p>
+
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#tech-stack">Tech Stack</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#roadmap">Roadmap</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs" alt="Next.js">
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/PostgreSQL-Neon-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/Drizzle_ORM-45C46B?style=for-the-badge" alt="Drizzle ORM">
+  <img src="https://img.shields.io/badge/Better_Auth-000000?style=for-the-badge" alt="Better Auth">
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="MIT License">
+</p>tion tracker. Every saved role, active application, and interview lives on one drag-and-drop board instead of scattered browser tabs and a spreadsheet nobody updates.
 
 **Live demo:** Coming soon — currently running locally at `http://localhost:3000`
 
