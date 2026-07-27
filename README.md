@@ -5,7 +5,7 @@
   Organize every opportunity—from your wishlist to an accepted offer—on a fast, intuitive Kanban board.
 </p>
 
-
+---
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs" alt="Next.js">
   <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
